@@ -238,33 +238,31 @@
         <div class="empty-state" id="emptyState">아직 답변이 없습니다 📝</div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- compat SDK (정적) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
+    <!-- module SDK: config를 전역에 둠 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+
+        window.firebaseConfig = {
+            apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
+            authDomain: "contact-page-4a4da.firebaseapp.com",
+            databaseURL: "https://contact-page-4a4da-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "contact-page-4a4da",
+            storageBucket: "contact-page-4a4da.firebasestorage.app",
+            messagingSenderId: "273523225898",
+            appId: "1:273523225898:web:91c66954f0deb1734a5a53"
+        };
+
+        // module 초기화는 선택적(compat에서도 초기화 가능하도록 전역 config만 둠)
+        initializeApp(window.firebaseConfig);
+    </script>
+
+    <!-- compat 방식 스크립트: 실제 동작 로직 전체 -->
     <script>
-        //<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
-    authDomain: "contact-page-4a4da.firebaseapp.com",
-    databaseURL: "https://contact-page-4a4da-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "contact-page-4a4da",
-    storageBucket: "contact-page-4a4da.firebasestorage.app",
-    messagingSenderId: "273523225898",
-    appId: "1:273523225898:web:91c66954f0deb1734a5a53"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
-
-        // Firebase 초기화
+        // Firebase 초기화 (compat)
         let database;
         let answersRef;
         let draggedElement = null;
@@ -272,7 +270,7 @@
         let offsetY = 0;
 
         try {
-            firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(window.firebaseConfig);
             database = firebase.database();
             answersRef = database.ref('answers');
 
@@ -333,7 +331,7 @@
             note.dataset.id = answer.id;
             
             // 저장된 위치가 있으면 사용, 없으면 랜덤 배치
-            if (answer.position) {
+            if (answer.position && typeof answer.position.x === 'number' && typeof answer.position.y === 'number') {
                 note.style.left = answer.position.x + 'px';
                 note.style.top = answer.position.y + 'px';
             } else {
@@ -345,12 +343,12 @@
                 note.style.top = y + 'px';
             }
 
-            const date = new Date(answer.timestamp);
+            const date = new Date(answer.timestamp || Date.now());
             const formattedDate = `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
 
             note.innerHTML = `
                 <button class="delete-btn" onclick="deleteNote('${answer.id}')">×</button>
-                <div class="text">${escapeHtml(answer.text)}</div>
+                <div class="text">${escapeHtml(answer.text || '')}</div>
                 <div class="timestamp">${formattedDate}</div>
             `;
 
@@ -368,14 +366,20 @@
         }
 
         function startDrag(e) {
-            if (e.target.classList.contains('delete-btn')) return;
+            if (e.target && e.target.classList && e.target.classList.contains('delete-btn')) return;
             
             e.preventDefault();
             draggedElement = e.currentTarget;
             draggedElement.classList.add('dragging');
             
-            const clientX = e.type === 'touchstart' ? e.touches,[object Object],clientX : e.clientX;
-            const clientY = e.type === 'touchstart' ? e.touches,[object Object],clientY : e.clientY;
+            let clientX, clientY;
+            if (e.type === 'touchstart') {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
             
             const rect = draggedElement.getBoundingClientRect();
             offsetX = clientX - rect.left;
@@ -391,8 +395,14 @@
             if (!draggedElement) return;
             e.preventDefault();
             
-            const clientX = e.type === 'touchmove' ? e.touches,[object Object],clientX : e.clientX;
-            const clientY = e.type === 'touchmove' ? e.touches,[object Object],clientY : e.clientY;
+            let clientX, clientY;
+            if (e.type === 'touchmove') {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
             
             const board = document.getElementById('board');
             const boardRect = board.getBoundingClientRect();
@@ -416,11 +426,13 @@
             // Firebase에 위치 저장
             const id = draggedElement.dataset.id;
             const position = {
-                x: parseInt(draggedElement.style.left),
-                y: parseInt(draggedElement.style.top)
+                x: parseInt(draggedElement.style.left) || 0,
+                y: parseInt(draggedElement.style.top) || 0
             };
             
-            answersRef.child(id).update({ position });
+            if (answersRef && id) {
+                answersRef.child(id).update({ position });
+            }
             
             draggedElement = null;
             document.removeEventListener('mousemove', drag);
@@ -431,12 +443,12 @@
 
         function deleteNote(id) {
             if (!confirm('이 답변을 삭제하시겠습니까?')) return;
-            answersRef.child(id).remove();
+            if (answersRef && id) answersRef.child(id).remove();
         }
 
         function clearAll() {
             if (!confirm('모든 답변을 삭제하시겠습니까?')) return;
-            answersRef.remove();
+            if (answersRef) answersRef.remove();
         }
     </script>
 </body>
