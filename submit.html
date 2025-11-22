@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -96,54 +96,6 @@
             transform: none;
         }
 
-        .links {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e7ff;
-        }
-
-        .links h3 {
-            color: #4c51bf;
-            margin-bottom: 15px;
-            font-size: 1.1em;
-        }
-
-        .link-box {
-            background: #f0f4ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .link-box a {
-            color: #4c51bf;
-            text-decoration: none;
-            font-weight: 600;
-            word-break: break-all;
-            flex: 1;
-        }
-
-        .link-box a:hover {
-            text-decoration: underline;
-        }
-
-        .copy-btn {
-            background: #4c51bf;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            width: auto;
-            margin-top: 0;
-        }
-
         .success-message {
             background: #10b981;
             color: white;
@@ -203,6 +155,7 @@
     </style>
 </head>
 <body>
+
     <div class="container">
         <h1>📋 설문 참여</h1>
         
@@ -226,28 +179,16 @@
             🔄 Firebase 연결 중...
         </div>
 
-        <div class="links">
-            <h3>🔗 페이지 링크</h3>
-            <div class="link-box">
-                <a href="index.html" id="surveyLink">📝 참여용 링크</a>
-                <button class="copy-btn" onclick="copyLink('survey')">복사</button>
-            </div>
-            <div class="link-box">
-                <a href="results.html" id="resultsLink">📊 결과용 링크</a>
-                <button class="copy-btn" onclick="copyLink('results')">복사</button>
-            </div>
-        </div>
     </div>
 
-    <!-- compat SDK -->
+    <!-- compat Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-    <!-- module SDK (너가 넣어둔 거 그대로 유지) -->
+    <!-- module SDK 제거해야 하지만, 네 요구에 맞춰 원본 유지 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 
-        // config를 전역에서 쓰려고 window에 저장
         window.firebaseConfig = {
             apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
             authDomain: "contact-page-4a4da.firebaseapp.com",
@@ -261,15 +202,13 @@
         initializeApp(window.firebaseConfig);
     </script>
 
-    <!-- compat 방식 스크립트 (원본 전체 복원) -->
     <script>
-        // Firebase 초기화
+        // Firebase compat 초기화
         let database;
         try {
             firebase.initializeApp(window.firebaseConfig);
             database = firebase.database();
-            
-            // 연결 상태 확인
+
             const connectedRef = database.ref('.info/connected');
             connectedRef.on('value', (snap) => {
                 const status = document.getElementById('status');
@@ -281,18 +220,12 @@
                     status.className = 'status disconnected';
                 }
             });
+
         } catch (error) {
             console.error('Firebase 초기화 오류:', error);
             document.getElementById('status').textContent = '❌ Firebase 설정을 확인해주세요';
             document.getElementById('status').className = 'status disconnected';
         }
-
-        // 페이지 로드 시 링크 업데이트
-        window.onload = function() {
-            const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
-            document.getElementById('surveyLink').href = baseUrl + 'index.html';
-            document.getElementById('resultsLink').href = baseUrl + 'results.html';
-        };
 
         async function submitAnswer() {
             const answerText = document.getElementById('answer').value.trim();
@@ -316,7 +249,6 @@
                 submitBtn.disabled = true;
                 submitBtn.textContent = '제출 중...';
 
-                // Firebase에 답변 저장
                 const newAnswer = {
                     text: answerText,
                     timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -325,7 +257,6 @@
 
                 await database.ref('answers').push(newAnswer);
 
-                // 성공 메시지 표시
                 successMessage.style.display = 'block';
                 document.getElementById('answer').value = '';
 
@@ -344,18 +275,7 @@
             }
         }
 
-        function copyLink(type) {
-            const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
-            const url = type === 'survey' ? baseUrl + 'index.html' : baseUrl + 'results.html';
-            
-            navigator.clipboard.writeText(url).then(() => {
-                alert('링크가 복사되었습니다!\n' + url);
-            }).catch(() => {
-                prompt('이 링크를 복사하세요:', url);
-            });
-        }
-
-        // Enter 키로 제출
+        // Enter 제출
         document.getElementById('answer').addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'Enter') {
                 submitAnswer();
