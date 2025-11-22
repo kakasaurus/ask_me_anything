@@ -5,18 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>설문 결과 페이지</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            overflow-x: hidden;
         }
 
         .header {
@@ -24,7 +19,7 @@
             border-radius: 15px;
             padding: 20px 30px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -32,44 +27,28 @@
             gap: 15px;
         }
 
-        h1 {
-            color: #4c51bf;
-            font-size: 1.8em;
-        }
+        h1 { color: #4c51bf; font-size: 1.8em; }
 
-        .header-right {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
         .count {
-            background: #4c51bf;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
+            background: #4c51bf; color: white;
+            padding: 10px 20px; border-radius: 20px; font-weight: bold;
         }
 
         .status {
-            background: #64748b;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 15px;
-            font-size: 14px;
+            background: #64748b; color: white;
+            padding: 8px 15px; border-radius: 15px; font-size: 14px;
         }
 
-        .status.connected {
-            background: #10b981;
-        }
+        .status.connected { background: #10b981; }
 
         .board {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255,255,255,0.95);
             border-radius: 15px;
             padding: 30px;
             min-height: calc(100vh - 140px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             position: relative;
             overflow: auto;
         }
@@ -80,173 +59,62 @@
             min-height: 150px;
             padding: 15px;
             padding-top: 35px;
-            background: linear-gradient(135deg, #a5f3fc 0%, #67e8f9 100%);
+            background: linear-gradient(135deg,#a5f3fc,#67e8f9);
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             cursor: move;
-            transition: transform 0.2s, box-shadow 0.2s;
-            word-wrap: break-word;
+            transition: transform 0.2s;
             animation: fadeIn 0.5s ease-in;
         }
 
-        .sticky-note:hover {
-            transform: rotate(0deg) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-        }
+        .sticky-note:hover { transform: scale(1.05); z-index: 1000; }
 
-        .sticky-note.dragging {
-            opacity: 0.7;
-            z-index: 1001;
-        }
-
-        .sticky-note:nth-child(2n) {
-            background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
-        }
-
-        .sticky-note:nth-child(3n) {
-            background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 100%);
-        }
-
-        .sticky-note:nth-child(4n) {
-            background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
-        }
+        .sticky-note.dragging { opacity: 0.7; z-index: 1001; }
 
         .delete-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            line-height: 1;
-            display: none;
-            transition: background 0.2s;
-            z-index: 10;
+            position: absolute; top: 5px; right: 5px;
+            background: #ef4444; color: white; border: none;
+            border-radius: 50%; width: 25px; height: 25px;
+            cursor: pointer; font-size: 16px; display: none;
         }
 
-        .sticky-note:hover .delete-btn {
-            display: block;
-        }
-
-        .delete-btn:hover {
-            background: #dc2626;
-        }
+        .sticky-note:hover .delete-btn { display: block; }
 
         .timestamp {
-            font-size: 11px;
-            color: #1e293b;
-            margin-top: 10px;
-            opacity: 0.7;
-            font-style: italic;
-        }
-
-        .text {
-            color: #1e3a8a;
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 11px; opacity: 0.7; margin-top: 10px;
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8) translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .clear-all {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .clear-all:hover {
-            background: #dc2626;
-        }
-
-        .back-btn {
-            background: #4c51bf;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .back-btn:hover {
-            background: #434190;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 1.2em;
-            margin-top: 100px;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .header-right {
-                justify-content: space-between;
-            }
-
-            h1 {
-                font-size: 1.4em;
-            }
-
-            .sticky-note {
-                width: 160px;
-                min-height: 120px;
-                font-size: 13px;
-            }
+            from { opacity: 0; transform: scale(0.8) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>📊 설문 결과</h1>
         <div class="header-right">
             <span class="status" id="status">🔄 연결 중...</span>
-            <a href="index.html" class="back-btn">← 참여 페이지</a>
+            <a href="index.html" class="back-btn" style="background:#4c51bf;color:white;padding:10px 20px;border-radius:10px;text-decoration:none;">← 참여 페이지</a>
             <span class="count" id="answerCount">답변: 0개</span>
-            <button class="clear-all" onclick="clearAll()">전체 삭제</button>
+            <button class="clear-all" onclick="clearAll()" style="background:#ef4444;color:white;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;">전체 삭제</button>
         </div>
     </div>
 
     <div class="board" id="board">
-        <div class="empty-state" id="emptyState">아직 답변이 없습니다 📝</div>
+        <div id="emptyState" style="color:#94a3b8;font-size:1.2em;text-align:center;margin-top:100px;">
+            아직 답변이 없습니다 📝
+        </div>
     </div>
 
-    <!-- compat SDK (정적) -->
+    <!-- ⚡ Firebase compat 버전 -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-    <!-- module SDK: config를 전역에 둠 -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-
-        window.firebaseConfig = {
+    <script>
+        /* ✅ Firebase config */
+        const firebaseConfig = {
             apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
             authDomain: "contact-page-4a4da.firebaseapp.com",
             databaseURL: "https://contact-page-4a4da-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -256,200 +124,149 @@
             appId: "1:273523225898:web:91c66954f0deb1734a5a53"
         };
 
-        // module 초기화는 선택적(compat에서도 초기화 가능하도록 전역 config만 둠)
-        initializeApp(window.firebaseConfig);
-    </script>
+        /* ✅ compat 방식 Firebase 초기화 (module 없음, 충돌 없음) */
+        firebase.initializeApp(firebaseConfig);
 
-    <!-- compat 방식 스크립트: 실제 동작 로직 전체 -->
-    <script>
-        // Firebase 초기화 (compat)
-        let database;
-        let answersRef;
-        let draggedElement = null;
-        let offsetX = 0;
-        let offsetY = 0;
+        const database = firebase.database();
+        const answersRef = database.ref("answers");
 
-        try {
-            firebase.initializeApp(window.firebaseConfig);
-            database = firebase.database();
-            answersRef = database.ref('answers');
+        /* 연결 상태 */
+        const connectedRef = database.ref(".info/connected");
+        connectedRef.on("value", (snap) => {
+            const status = document.getElementById("status");
+            if (snap.val() === true) {
+                status.textContent = "✅ 실시간 연결됨";
+                status.className = "status connected";
+            } else {
+                status.textContent = "❌ 연결 끊김";
+            }
+        });
 
-            // 연결 상태 확인
-            const connectedRef = database.ref('.info/connected');
-            connectedRef.on('value', (snap) => {
-                const status = document.getElementById('status');
-                if (snap.val() === true) {
-                    status.textContent = '✅ 실시간 연결됨';
-                    status.className = 'status connected';
-                } else {
-                    status.textContent = '❌ 연결 끊김';
-                    status.className = 'status';
-                }
-            });
-
-            // 실시간 데이터 리스너
-            answersRef.on('value', (snapshot) => {
-                loadAnswers(snapshot);
-            });
-
-        } catch (error) {
-            console.error('Firebase 초기화 오류:', error);
-            document.getElementById('status').textContent = '❌ Firebase 오류';
-        }
+        /* 실시간 데이터 불러오기 */
+        answersRef.on("value", (snapshot) => loadAnswers(snapshot));
 
         function loadAnswers(snapshot) {
-            const board = document.getElementById('board');
-            const emptyState = document.getElementById('emptyState');
-            
-            // 기존 포스트잇 제거
-            board.querySelectorAll('.sticky-note').forEach(note => note.remove());
+            const board = document.getElementById("board");
+            const emptyState = document.getElementById("emptyState");
+
+            board.querySelectorAll(".sticky-note").forEach(n => n.remove());
 
             const answers = [];
-            snapshot.forEach((childSnapshot) => {
-                answers.push({
-                    id: childSnapshot.key,
-                    ...childSnapshot.val()
-                });
-            });
+            snapshot.forEach(child => answers.push({ id: child.key, ...child.val() }));
 
-            if (answers.length === 0) {
-                emptyState.style.display = 'block';
-            } else {
-                emptyState.style.display = 'none';
-                answers.forEach((answer, index) => {
-                    createStickyNote(answer, index);
-                });
-            }
+            if (answers.length === 0) emptyState.style.display = "block";
+            else emptyState.style.display = "none";
 
-            document.getElementById('answerCount').textContent = `답변: ${answers.length}개`;
+            answers.forEach((a, i) => createSticky(a, i));
+            document.getElementById("answerCount").textContent = `답변: ${answers.length}개`;
         }
 
-        function createStickyNote(answer, index) {
-            const board = document.getElementById('board');
-            const note = document.createElement('div');
-            note.className = 'sticky-note';
+        function createSticky(answer, index) {
+            const board = document.getElementById("board");
+            const note = document.createElement("div");
+            note.className = "sticky-note";
             note.dataset.id = answer.id;
-            
-            // 저장된 위치가 있으면 사용, 없으면 랜덤 배치
-            if (answer.position && typeof answer.position.x === 'number' && typeof answer.position.y === 'number') {
-                note.style.left = answer.position.x + 'px';
-                note.style.top = answer.position.y + 'px';
+
+            if (answer.position) {
+                note.style.left = answer.position.x + "px";
+                note.style.top = answer.position.y + "px";
             } else {
-                const maxX = Math.max(board.clientWidth - 220, 10);
-                const maxY = Math.max(board.clientHeight - 170, 10);
-                const x = Math.random() * maxX;
-                const y = (index * 180) % maxY;
-                note.style.left = x + 'px';
-                note.style.top = y + 'px';
+                note.style.left = Math.random() * (board.clientWidth - 220) + "px";
+                note.style.top = (index * 180) % (board.clientHeight - 170) + "px";
             }
 
             const date = new Date(answer.timestamp || Date.now());
-            const formattedDate = `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+            const formatted = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2,"0")}`;
 
             note.innerHTML = `
                 <button class="delete-btn" onclick="deleteNote('${answer.id}')">×</button>
-                <div class="text">${escapeHtml(answer.text || '')}</div>
-                <div class="timestamp">${formattedDate}</div>
+                <div class="text">${escape(answer.text)}</div>
+                <div class="timestamp">${formatted}</div>
             `;
 
-            // 드래그 이벤트
-            note.addEventListener('mousedown', startDrag);
-            note.addEventListener('touchstart', startDrag, { passive: false });
-            
+            note.addEventListener("mousedown", startDrag);
+            note.addEventListener("touchstart", startDrag, { passive: false });
+
             board.appendChild(note);
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
+        function escape(text) {
+            const div = document.createElement("div");
             div.textContent = text;
             return div.innerHTML;
         }
 
-        function startDrag(e) {
-            if (e.target && e.target.classList && e.target.classList.contains('delete-btn')) return;
-            
-            e.preventDefault();
-            draggedElement = e.currentTarget;
-            draggedElement.classList.add('dragging');
-            
-            let clientX, clientY;
-            if (e.type === 'touchstart') {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-            
-            const rect = draggedElement.getBoundingClientRect();
-            offsetX = clientX - rect.left;
-            offsetY = clientY - rect.top;
+        let dragged = null, offsetX = 0, offsetY = 0;
 
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', stopDrag);
-            document.addEventListener('touchmove', drag, { passive: false });
-            document.addEventListener('touchend', stopDrag);
+        function startDrag(e) {
+            if (e.target.classList.contains("delete-btn")) return;
+
+            e.preventDefault();
+            dragged = e.currentTarget;
+            dragged.classList.add("dragging");
+
+            let cx = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
+            let cy = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
+
+            const rect = dragged.getBoundingClientRect();
+            offsetX = cx - rect.left;
+            offsetY = cy - rect.top;
+
+            document.addEventListener("mousemove", drag);
+            document.addEventListener("mouseup", stopDrag);
+            document.addEventListener("touchmove", drag, { passive: false });
+            document.addEventListener("touchend", stopDrag);
         }
 
         function drag(e) {
-            if (!draggedElement) return;
+            if (!dragged) return;
             e.preventDefault();
             
-            let clientX, clientY;
-            if (e.type === 'touchmove') {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-            
-            const board = document.getElementById('board');
-            const boardRect = board.getBoundingClientRect();
-            
-            let x = clientX - boardRect.left - offsetX;
-            let y = clientY - boardRect.top - offsetY;
-            
-            // 보드 경계 제한
-            x = Math.max(0, Math.min(x, board.clientWidth - draggedElement.offsetWidth));
-            y = Math.max(0, Math.min(y, board.clientHeight - draggedElement.offsetHeight));
-            
-            draggedElement.style.left = x + 'px';
-            draggedElement.style.top = y + 'px';
+            let cx = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+            let cy = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
+
+            const board = document.getElementById("board");
+            const rect = board.getBoundingClientRect();
+
+            let x = cx - rect.left - offsetX;
+            let y = cy - rect.top - offsetY;
+
+            x = Math.max(0, Math.min(x, board.clientWidth - dragged.offsetWidth));
+            y = Math.max(0, Math.min(y, board.clientHeight - dragged.offsetHeight));
+
+            dragged.style.left = x + "px";
+            dragged.style.top = y + "px";
         }
 
         function stopDrag() {
-            if (!draggedElement) return;
-            
-            draggedElement.classList.remove('dragging');
-            
-            // Firebase에 위치 저장
-            const id = draggedElement.dataset.id;
-            const position = {
-                x: parseInt(draggedElement.style.left) || 0,
-                y: parseInt(draggedElement.style.top) || 0
-            };
-            
-            if (answersRef && id) {
-                answersRef.child(id).update({ position });
-            }
-            
-            draggedElement = null;
-            document.removeEventListener('mousemove', drag);
-            document.removeEventListener('mouseup', stopDrag);
-            document.removeEventListener('touchmove', drag);
-            document.removeEventListener('touchend', stopDrag);
+            if (!dragged) return;
+
+            dragged.classList.remove("dragging");
+            const id = dragged.dataset.id;
+
+            answersRef.child(id).update({
+                position: {
+                    x: parseInt(dragged.style.left),
+                    y: parseInt(dragged.style.top)
+                }
+            });
+
+            dragged = null;
+
+            document.removeEventListener("mousemove", drag);
+            document.removeEventListener("mouseup", stopDrag);
+            document.removeEventListener("touchmove", drag);
+            document.removeEventListener("touchend", stopDrag);
         }
 
         function deleteNote(id) {
-            if (!confirm('이 답변을 삭제하시겠습니까?')) return;
-            if (answersRef && id) answersRef.child(id).remove();
+            if (confirm("삭제할까요?")) answersRef.child(id).remove();
         }
 
         function clearAll() {
-            if (!confirm('모든 답변을 삭제하시겠습니까?')) return;
-            if (answersRef) answersRef.remove();
+            if (confirm("전체 삭제?")) answersRef.remove();
         }
     </script>
+
 </body>
 </html>
