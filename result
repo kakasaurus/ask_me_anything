@@ -243,16 +243,26 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <script>
-        // ⚠️ Firebase 설정 - index.html과 동일한 설정값 사용
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+        //<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
+    authDomain: "contact-page-4a4da.firebaseapp.com",
+    databaseURL: "https://contact-page-4a4da-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "contact-page-4a4da",
+    storageBucket: "contact-page-4a4da.firebasestorage.app",
+    messagingSenderId: "273523225898",
+    appId: "1:273523225898:web:91c66954f0deb1734a5a53"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
 
         // Firebase 초기화
         let database;
