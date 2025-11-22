@@ -178,32 +178,27 @@
         <div class="status" id="status">
             🔄 Firebase 연결 중...
         </div>
-
     </div>
 
-    <!-- compat Firebase -->
+    <!-- Firebase Config -->
+    <script>
+    window.firebaseConfig = {
+        apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
+        authDomain: "contact-page-4a4da.firebaseapp.com",
+        databaseURL: "https://contact-page-4a4da-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "contact-page-4a4da",
+        storageBucket: "contact-page-4a4da.firebasestorage.app",
+        messagingSenderId: "273523225898",
+        appId: "1:273523225898:web:91c66954f0deb1734a5a53"
+    };
+    </script>
+
+    <!-- Firebase compat SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-    <!-- module SDK 제거해야 하지만, 네 요구에 맞춰 원본 유지 -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-
-        window.firebaseConfig = {
-            apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
-            authDomain: "contact-page-4a4da.firebaseapp.com",
-            databaseURL: "https://contact-page-4a4da-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "contact-page-4a4da",
-            storageBucket: "contact-page-4a4da.firebasestorage.app",
-            messagingSenderId: "273523225898",
-            appId: "1:273523225898:web:91c66954f0deb1734a5a53"
-        };
-
-        initializeApp(window.firebaseConfig);
-    </script>
-
     <script>
-        // Firebase compat 초기화
+        // Firebase 초기화
         let database;
         try {
             firebase.initializeApp(window.firebaseConfig);
@@ -223,10 +218,12 @@
 
         } catch (error) {
             console.error('Firebase 초기화 오류:', error);
-            document.getElementById('status').textContent = '❌ Firebase 설정을 확인해주세요';
-            document.getElementById('status').className = 'status disconnected';
+            const s = document.getElementById('status');
+            s.textContent = '❌ Firebase 설정을 확인해주세요';
+            s.className = 'status disconnected';
         }
 
+        // 제출 기능
         async function submitAnswer() {
             const answerText = document.getElementById('answer').value.trim();
             const submitBtn = document.getElementById('submitBtn');
@@ -275,7 +272,7 @@
             }
         }
 
-        // Enter 제출
+        // Ctrl+Enter 제출
         document.getElementById('answer').addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'Enter') {
                 submitAnswer();
