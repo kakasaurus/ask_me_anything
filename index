@@ -239,35 +239,34 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- compat SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-   <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    <!-- module SDK (너가 넣어둔 거 그대로 유지) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
-    authDomain: "contact-page-4a4da.firebaseapp.com",
-    databaseURL: "https://contact-page-4a4da-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "contact-page-4a4da",
-    storageBucket: "contact-page-4a4da.firebasestorage.app",
-    messagingSenderId: "273523225898",
-    appId: "1:273523225898:web:91c66954f0deb1734a5a53"
-  };
+        // config를 전역에서 쓰려고 window에 저장
+        window.firebaseConfig = {
+            apiKey: "AIzaSyBZHEvatAyEQHY98SW9ldX00YKASVPMkkY",
+            authDomain: "contact-page-4a4da.firebaseapp.com",
+            databaseURL: "https://contact-page-4a4da-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "contact-page-4a4da",
+            storageBucket: "contact-page-4a4da.firebasestorage.app",
+            messagingSenderId: "273523225898",
+            appId: "1:273523225898:web:91c66954f0deb1734a5a53"
+        };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
+        initializeApp(window.firebaseConfig);
+    </script>
 
+    <!-- compat 방식 스크립트 (원본 전체 복원) -->
+    <script>
         // Firebase 초기화
         let database;
         try {
-            firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(window.firebaseConfig);
             database = firebase.database();
             
             // 연결 상태 확인
@@ -363,5 +362,6 @@
             }
         });
     </script>
+
 </body>
 </html>
